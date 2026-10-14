@@ -18,7 +18,7 @@ export default function Features() {
       className="scroll-mt-20 bg-white py-16 sm:py-20"
     >
       <div className={sectionWrapper}>
-        <div className="max-w-2xl">
+        <div className="reveal-group max-w-2xl">
           <span className={sectionLabel}>Fitur</span>
           <h2 id="fitur-heading" className={sectionTitle}>
             Semua yang Anda butuhkan untuk melapor dengan aman
@@ -29,7 +29,7 @@ export default function Features() {
           </p>
         </div>
 
-        <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="reveal-group mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => {
             const Icon = iconMap[feature.icon]
             return (

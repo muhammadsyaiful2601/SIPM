@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, ShieldCheck } from 'lucide-react'
+import { useSmoothScroll } from '../../hooks/useSmoothScroll'
 import { focusRing } from '../../lib/ui'
 
 export default function Footer() {
+  const scrollTo = useSmoothScroll()
   return (
     <footer className="border-t border-slate-100 bg-white">
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
@@ -53,6 +55,9 @@ export default function Footer() {
             <li>
               <a
                 href="#tentang"
+                onClick={(event) => {
+                  scrollTo('#tentang', event)
+                }}
                 className={
                   'rounded-md text-xs font-medium text-slate-700 underline-offset-4 transition-colors duration-200 hover:text-emerald-700 hover:underline ' +
                   focusRing

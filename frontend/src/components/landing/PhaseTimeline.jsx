@@ -4,39 +4,56 @@ import { sectionWrapper } from '../../lib/ui'
 const tones = {
   emerald: {
     line: 'bg-emerald-400',
-    dot: 'border-emerald-400 bg-white',
+    dot: 'bg-emerald-500',
     label: 'text-emerald-600',
-    gate: 'bg-emerald-500 text-white',
-    curve: 'border-emerald-400',
+    pill: 'bg-emerald-500 text-white',
+    stroke: 'border-emerald-400',
   },
   amber: {
     line: 'bg-amber-400',
-    dot: 'border-amber-400 bg-white',
+    dot: 'bg-amber-500',
     label: 'text-amber-600',
-    gate: 'bg-amber-500 text-white',
-    curve: 'border-amber-400',
+    pill: 'bg-amber-500 text-white',
+    stroke: 'border-amber-400',
   },
   sky: {
     line: 'bg-sky-500',
-    dot: 'border-sky-500 bg-white',
+    dot: 'bg-sky-600',
     label: 'text-sky-600',
-    gate: 'bg-sky-600 text-white',
-    curve: 'border-sky-500',
+    pill: 'bg-sky-600 text-white',
+    stroke: 'border-sky-500',
   },
 }
 
-function Curve({ tone, side }) {
-  const base =
-    'hidden h-10 w-10 md:block ' + tones[tone].curve + ' border-2 '
+function PhasePill({ tone, children }) {
+  return (
+    <span
+      className={
+        'inline-block rounded-full px-4 py-2 font-mono text-[11px] font-semibold tracking-wide whitespace-nowrap uppercase ' +
+        tones[tone].pill
+      }
+    >
+      {children}
+    </span>
+  )
+}
+
+function Connector({ tone, side }) {
+  const corner =
+    side === 'right'
+      ? 'rounded-tr-[56px] border-t-[3px] border-r-[3px]'
+      : 'rounded-tl-[56px] border-t-[3px] border-l-[3px]'
 
   return (
     <span
       aria-hidden="true"
       className={
-        base +
-        (side === 'right'
-          ? 'ml-auto rounded-br-3xl border-t-0 border-l-0'
-          : 'rounded-bl-3xl border-t-0 border-r-0')
+        'pointer-events-none absolute top-[3px] hidden h-[72px] w-16 md:block ' +
+        corner +
+        ' ' +
+        (side === 'right' ? 'right-0' : 'left-0') +
+        ' ' +
+        tones[tone].stroke
       }
     />
   )
@@ -54,9 +71,19 @@ export default function PhaseTimeline() {
           Tahapan penanganan aduan
         </h2>
 
-        <ol className="space-y-10 md:space-y-12">
+        <ol className="reveal-group max-w-5xl space-y-8 md:space-y-10">
           {phases.map((phase, index) => {
             const tone = tones[phase.tone]
+            const isReversed = index % 2 === 1
+            const hasConnector = index < phases.length - 1
+
+            const connectorSide = isReversed ? 'left' : 'right'
+            const gateOnLeft = hasConnector && connectorSide === 'right'
+            const inset = gateOnLeft
+              ? 'md:pr-20'
+              : hasConnector
+                ? 'md:pl-20'
+                : 'md:pr-3'
 
             return (
               <li key={phase.id}>
@@ -69,59 +96,68 @@ export default function PhaseTimeline() {
                   {phase.id} - {phase.label}
                 </p>
 
-                <div className="mt-6 flex items-start gap-4 md:gap-6">
-                  <div className="min-w-0 flex-1">
-                    <div className="relative">
-                      <span
-                        aria-hidden="true"
-                        className={
-                          'absolute top-1.5 right-0 left-0 h-0.5 rounded-full ' +
-                          tone.line
-                        }
-                      />
-                      <ul className="relative grid gap-6 sm:grid-cols-3">
-                        {phase.checkpoints.map((checkpoint) => (
-                          <li key={checkpoint.title}>
-                            <span
-                              aria-hidden="true"
-                              className={
-                                'block h-3.5 w-3.5 rounded-full ring-4 ring-slate-50 ' +
-                                tone.dot
-                              }
-                            />
-                            <p className="mt-3 text-sm font-semibold text-slate-900">
-                              {checkpoint.title}
-                            </p>
-                            <p className="mt-1 text-xs leading-relaxed text-slate-600">
-                              {checkpoint.description}
-                            </p>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                <div className="mt-5 flex items-start gap-5 md:gap-6">
+                  {gateOnLeft && (
+                    <span className="hidden -mt-[15px] md:inline-block">
+                      <PhasePill tone={phase.tone}>{phase.gate}</PhasePill>
+                    </span>
+                  )}
 
-                    <Curve
-                      tone={phase.tone}
-                      side={index % 2 === 0 ? 'right' : 'left'}
+                  <div className="relative min-w-0 flex-1">
+                    <span
+                      aria-hidden="true"
+                      className={
+                        'absolute top-[3px] right-0 left-0 hidden h-[3px] rounded-full md:block ' +
+                        tone.line
+                      }
                     />
+
+                    <ul
+                      className={
+                        'relative flex flex-col gap-6 md:flex-row md:gap-8 ' +
+                        inset
+                      }
+                    >
+                      {phase.checkpoints.map((checkpoint) => (
+                        <li
+                          key={checkpoint.title}
+                          className="min-w-0 md:flex-1"
+                        >
+                          <span
+                            aria-hidden="true"
+                            className={
+                              'hidden h-3 w-3 rounded-full ring-4 ring-slate-50 md:block ' +
+                              tone.dot
+                            }
+                          />
+                          <p className="text-sm font-semibold text-slate-900 md:mt-4">
+                            {checkpoint.title}
+                          </p>
+                          <p className="mt-1 text-xs leading-relaxed text-slate-600">
+                            {checkpoint.description}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {hasConnector && (
+                      <Connector tone={phase.tone} side={connectorSide} />
+                    )}
                   </div>
 
-                  <span
-                    className={
-                      'hidden shrink-0 rounded-full px-4 py-2 font-mono text-[11px] font-semibold tracking-wide uppercase md:inline-block ' +
-                      tone.gate
-                    }
-                  >
-                    {phase.gate}
-                  </span>
+                  {!gateOnLeft && (
+                    <span className="hidden -mt-[15px] md:inline-block">
+                      <PhasePill tone={phase.tone}>{phase.gate}</PhasePill>
+                    </span>
+                  )}
                 </div>
               </li>
             )
           })}
         </ol>
 
-        <p className="mt-12 text-center font-mono text-xs text-slate-500">
-         Dukungan PPKPT: /hubungi-petugas - /panduan-aduan - /status-aduan-
+        <p className="mt-14 text-center font-mono text-xs text-slate-500">
+          Dukungan PPKPT: /hubungi-petugas - /panduan-aduan - /status-aduan -
           /faq
         </p>
       </div>

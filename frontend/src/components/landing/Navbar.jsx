@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Menu, ShieldCheck, X } from 'lucide-react'
+import { useSmoothScroll } from '../../hooks/useSmoothScroll'
 import { focusRing } from '../../lib/ui'
 
 const links = [
@@ -13,6 +14,7 @@ const links = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const scrollTo = useSmoothScroll()
 
   useEffect(() => {
     if (!open) return
@@ -63,6 +65,9 @@ export default function Navbar() {
               <li key={link.href}>
                 <a
                   href={link.href}
+                  onClick={(event) => {
+                    scrollTo(link.href, event)
+                  }}
                   className={
                     'rounded-md text-sm font-medium text-slate-600 transition-colors duration-200 hover:text-emerald-700 ' +
                     focusRing
@@ -129,7 +134,10 @@ export default function Navbar() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  onClick={() => setOpen(false)}
+                  onClick={(event) => {
+                    scrollTo(link.href, event)
+                    setOpen(false)
+                  }}
                   className={
                     'block rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-100 hover:text-slate-900 ' +
                     focusRing

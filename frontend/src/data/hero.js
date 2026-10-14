@@ -6,10 +6,6 @@ const heroChecks = [
 
 const partners = [
   'PPKPT PSDKU Tanah Datar',
-  'Poliman Teduh',
-  'BEM PSDKU',
-  'Unit Sarana dan Prasarana',
-  'Unit Akademik',
 ]
 
 const metaStats = [

@@ -1,1 +1,149 @@
 @import 'tailwindcss';
+
+/*
+ * Liquid blob reveal.
+ *
+ * Lapis bawah: overlay emerald. Lapis atas: konten halaman dipotong
+ * clip-path inset() dengan radius organik. Bentuknya tumbuh dari titik
+ * kursor, sempat "membelah" di tengah animasi, lalu menutup layar.
+ *
+ * Nilai awal (--b-top/right/bottom/left) dihitung JavaScript dari posisi
+ * kursor, sedangkan nilai akhir cukup inset(0) sehingga tidak perlu
+ * mengukur ukuran halaman.
+ */
+@keyframes blob-open {
+  from {
+    clip-path: inset(
+      var(--b-top, 50%) var(--b-right, 50%) var(--b-bottom, 50%)
+        var(--b-left, 50%) round 999px
+    );
+  }
+
+  45% {
+    clip-path: inset(
+        calc(var(--b-top, 50%) * 0.4) calc(var(--b-right, 50%) * 0.4)
+          calc(var(--b-bottom, 50%) * 0.4) calc(var(--b-left, 50%) * 0.4)
+        round 46% 54% 58% 42% / 52% 44% 56% 48%
+    );
+  }
+
+  to {
+    clip-path: inset(0px 0px 0px 0px round 0px);
+  }
+}
+
+.page-blob {
+  position: relative;
+  z-index: 70;
+  animation: blob-open 620ms cubic-bezier(0.65, 0, 0.35, 1) both;
+  will-change: clip-path;
+}
+
+.page-blob-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 120% at var(--b-cx, 50%) var(--b-cy, 50%),
+    #34d399,
+    #10b981 55%,
+    #047857
+  );
+}
+
+@keyframes overlay-fade {
+  from {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.page-blob-overlay {
+  animation: overlay-fade 900ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-blob,
+  .page-blob-overlay {
+    animation: none;
+  }
+
+  .page-blob {
+    clip-path: none;
+  }
+
+  .page-blob-overlay {
+    display: none;
+  }
+}
+
+/*
+ * Staggered reveal untuk elemen di dalam .reveal-group.
+ * Fill mode "backwards" dipilih agar animasi selesai tidak menahan
+ * style akhir, sehingga hover dan transform 3D tetap bekerja.
+ */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.reveal-group > * {
+  animation: reveal-up 620ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.reveal-group > *:nth-child(1) {
+  animation-delay: 20ms;
+}
+
+.reveal-group > *:nth-child(2) {
+  animation-delay: 85ms;
+}
+
+.reveal-group > *:nth-child(3) {
+  animation-delay: 150ms;
+}
+
+.reveal-group > *:nth-child(4) {
+  animation-delay: 215ms;
+}
+
+.reveal-group > *:nth-child(5) {
+  animation-delay: 280ms;
+}
+
+.reveal-group > *:nth-child(6) {
+  animation-delay: 345ms;
+}
+
+.reveal-group > *:nth-child(7) {
+  animation-delay: 410ms;
+}
+
+.reveal-group > *:nth-child(8) {
+  animation-delay: 475ms;
+}
+
+.reveal-group > *:nth-child(n + 9) {
+  animation-delay: 540ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-group > * {
+    animation: none;
+  }
+}

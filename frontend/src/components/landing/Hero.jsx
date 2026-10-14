@@ -1,7 +1,19 @@
-﻿import { Link } from 'react-router-dom'
+﻿import { useQuery } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 import { ArrowRight, CheckCircle2, Clock3, EyeOff, TrendingUp } from 'lucide-react'
 import { heroChecks } from '../../data/hero'
+import api from '../../lib/api'
+import { useSmoothScroll } from '../../hooks/useSmoothScroll'
 import { focusRing, sectionWrapper } from '../../lib/ui'
+
+const emptyStats = {
+  period_label: '',
+  total: 0,
+  selesai: 0,
+  direspon: 0,
+  tepat_waktu: 0,
+  persentase_tepat_waktu: 0,
+}
 
 const panels = [
   {
@@ -46,6 +58,20 @@ const toneDot = {
 }
 
 export default function Hero() {
+  const scrollTo = useSmoothScroll()
+
+  const { data } = useQuery({
+    queryKey: ['public-stats'],
+    queryFn: async () => {
+      const response = await api.get('/public/stats')
+      return response.data
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const stats = { ...emptyStats, ...data }
+  const persentase = stats.persentase_tepat_waktu
+
   return (
     <section
       aria-labelledby="hero-heading"
@@ -62,7 +88,7 @@ export default function Hero() {
           ' relative grid items-center gap-12 py-16 lg:grid-cols-2 lg:gap-16 lg:py-24'
         }
       >
-        <div>
+        <div className="reveal-group">
           <p className="text-xs font-semibold tracking-widest text-emerald-600 uppercase">
             Sistem resmi PPKPT PSDKU Tanah Datar
           </p>
@@ -109,6 +135,9 @@ export default function Hero() {
 
             <a
               href="#cara-kerja"
+              onClick={(event) => {
+                scrollTo('#cara-kerja', event)
+              }}
               className={
                 'inline-flex items-center justify-center rounded-lg px-5 py-3 text-sm font-semibold text-slate-700 transition-colors duration-200 hover:bg-slate-100 ' +
                 focusRing
@@ -142,7 +171,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="relative">
+        <div className="reveal-group relative">
           <div className="rounded-2xl bg-slate-900 p-5 shadow-2xl shadow-slate-900/20 ring-1 ring-slate-800">
             <div className="flex items-center gap-1.5 border-b border-slate-800 pb-4">
               <span className="h-2.5 w-2.5 rounded-full bg-slate-700" />
@@ -200,20 +229,38 @@ export default function Hero() {
 
           <div className="absolute -bottom-8 -left-4 w-56 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-900/10 sm:-left-10">
             <p className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
-              Rekap bulan ini
+              Rekap {stats.period_label || 'bulan ini'}
             </p>
+
             <p className="mt-2 flex items-center gap-1.5 text-2xl font-bold text-slate-900">
-              <TrendingUp
-                aria-hidden="true"
-                className="h-4 w-4 text-emerald-600"
-              />
-              82%
+              {persentase > 0 && (
+                <TrendingUp
+                  aria-hidden="true"
+                  className="h-4 w-4 text-emerald-600"
+                />
+              )}
+              {persentase}
+              {persentase > 0 && '%'}
             </p>
+
             <p className="mt-1 text-xs leading-relaxed text-slate-600">
-              aduan selesai dalam 3 hari kerja
+              {stats.total > 0
+                ? `${stats.tepat_waktu} dari ${stats.direspon} aduan direspon dalam 3 hari kerja`
+                : 'Belum ada aduan masuk bulan ini'}
             </p>
-            <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
-              <div className="h-full w-[82%] rounded-full bg-emerald-500" />
+
+            <div
+              role="progressbar"
+              aria-label="Persentase aduan yang direspon dalam 3 hari kerja"
+              aria-valuenow={persentase}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-100"
+            >
+              <div
+                className="h-full rounded-full bg-emerald-500 transition-[width] duration-500 motion-reduce:transition-none"
+                style={{ width: `${persentase}%` }}
+              />
             </div>
           </div>
 

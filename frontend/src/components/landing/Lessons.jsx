@@ -31,7 +31,7 @@ export default function Lessons() {
       className="scroll-mt-20 bg-white py-20"
     >
       <div className={sectionWrapper}>
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="reveal-group mx-auto max-w-2xl text-center">
           <h2
             id="modul-heading"
             className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
@@ -55,7 +55,7 @@ export default function Lessons() {
               >
                 <Illustration command={lesson.command} labels={lesson.labels} />
 
-                <div>
+                <div className="reveal-group">
                   <p className="font-mono text-xs font-semibold tracking-widest text-emerald-600 uppercase">
                     {lesson.phase}
                   </p>

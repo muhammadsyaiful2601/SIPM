@@ -7,7 +7,7 @@ export default function LogoStrip() {
       aria-label="Unit terkait"
       className="border-y border-slate-100 bg-slate-50/70 py-10"
     >
-      <div className={sectionWrapper}>
+      <div className={sectionWrapper + ' reveal-group text-center'}>
         <p className="text-center text-xs font-semibold tracking-widest text-slate-500 uppercase">
           Digunakan oleh unit di PSDKU Tanah Datar
         </p>

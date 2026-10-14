@@ -25,7 +25,7 @@ export default function Privacy() {
       className="scroll-mt-20 border-y border-slate-200 bg-slate-50 py-16 sm:py-20"
     >
       <div className={sectionWrapper}>
-        <div className="grid items-center gap-12 md:grid-cols-2">
+        <div className="reveal-group grid items-center gap-12 md:grid-cols-2">
           <div>
             <span className="text-sm font-semibold text-emerald-800">
               Tentang SIPM
@@ -53,7 +53,7 @@ export default function Privacy() {
             </Link>
           </div>
 
-          <ul className="space-y-4">
+          <ul className="reveal-group space-y-4">
             {points.map((point) => (
               <li
                 key={point.description}
