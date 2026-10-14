@@ -49,11 +49,19 @@ class AuthController extends Controller
 
         $user->tokens()->where('name', 'sipm-web')->delete();
 
-        $token = $user->createToken('sipm-web')->plainTextToken;
+        $token = $user->createToken('sipm-web');
+
+        if ($request->boolean('remember')) {
+            $token->accessToken->forceFill([
+                'expires_at' => now()->addDays(30),
+            ])->save();
+        }
+
+        $plainTextToken = $token->plainTextToken;
 
         return response()->json([
             'message' => 'Login berhasil.',
-            'token' => $token,
+            'token' => $plainTextToken,
             'user' => new UserResource($user),
         ]);
     }

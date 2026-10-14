@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import api from '../lib/api'
-import { AuthContext, TOKEN_KEY } from './AuthContext'
-
-function hasStoredToken() {
-  return Boolean(localStorage.getItem(TOKEN_KEY))
-}
+import { clearToken, readToken, writeToken } from '../lib/tokenStorage'
+import { AuthContext } from './AuthContext'
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
-  const [initializing, setInitializing] = useState(hasStoredToken)
+  const [initializing, setInitializing] = useState(() =>
+    Boolean(readToken()),
+  )
 
   const logout = useCallback(async () => {
     try {
@@ -16,12 +15,12 @@ export function AuthProvider({ children }) {
     } catch {
       // Token sudah tidak valid, abaikan.
     }
-    localStorage.removeItem(TOKEN_KEY)
+    clearToken()
     setUser(null)
   }, [])
 
   useEffect(() => {
-    if (!hasStoredToken()) return
+    if (!readToken()) return
 
     let active = true
 
@@ -31,7 +30,7 @@ export function AuthProvider({ children }) {
         if (active) setUser(response.data.user)
       })
       .catch(() => {
-        localStorage.removeItem(TOKEN_KEY)
+        clearToken()
       })
       .finally(() => {
         if (active) setInitializing(false)
@@ -42,14 +41,15 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
-  const login = useCallback(async ({ identifier, password, role }) => {
+  const login = useCallback(async ({ identifier, password, role, remember }) => {
     const response = await api.post('/auth/login', {
       identifier,
       password,
       role,
+      remember: Boolean(remember),
     })
 
-    localStorage.setItem(TOKEN_KEY, response.data.token)
+    writeToken(response.data.token, remember)
     setUser(response.data.user)
 
     return response.data.user

@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-export const TOKEN_KEY = 'sipm_token'
+export { TOKEN_KEY } from '../lib/tokenStorage'
 
 export const AuthContext = createContext(null)
 

@@ -1,140 +1,226 @@
 ﻿import { Link } from 'react-router-dom'
-import { ArrowRight, Clock3, EyeOff, Layers, ShieldCheck } from 'lucide-react'
-import { focusRing } from '../../lib/ui'
+import { ArrowRight, CheckCircle2, Clock3, EyeOff, TrendingUp } from 'lucide-react'
+import { heroChecks } from '../../data/hero'
+import { focusRing, sectionWrapper } from '../../lib/ui'
 
-const metrics = [
+const panels = [
   {
-    label: 'Target Respons',
-    value: '3 Hari',
-    icon: Clock3,
+    phase: 'Fase 1',
+    title: 'Pelaporan',
+    count: '3 langkah',
+    rows: [
+      '> masuk sebagai mahasiswa (NIM)',
+      '> isi formulir pengaduan',
+      '> lampirkan bukti pendukung',
+    ],
   },
   {
-    label: 'Kategori',
-    value: '3',
-    icon: Layers,
+    phase: 'Fase 2',
+    title: 'Penanganan',
+    count: '2 langkah',
+    rows: [
+      '> verifikasi dan balas pelapor',
+      '> disposisi ke unit kampus',
+    ],
   },
   {
-    label: 'Privasi',
-    value: 'Anonim',
-    icon: EyeOff,
+    phase: 'Fase 3',
+    title: 'Pelaporan dan rekap',
+    count: '2 langkah',
+    rows: ['> rekap statistik aduan', '> eskalasi bila lewat 3 hari'],
   },
 ]
 
-const timeline = [
-  { label: 'Terkirim', done: true, time: 'Hari ini, 09.12 WIB' },
-  { label: 'Sedang Diproses Satgas', done: false, time: null },
-  { label: 'Disposisi', done: false, time: null },
-  { label: 'Selesai', done: false, time: null },
+const statusRows = [
+  { label: 'Terkirim', tone: 'amber' },
+  { label: 'Sedang diproses', tone: 'emerald' },
+  { label: 'Disposisi', tone: 'sky' },
+  { label: 'Selesai', tone: 'slate' },
 ]
+
+const toneDot = {
+  amber: 'bg-amber-400',
+  emerald: 'bg-emerald-400',
+  sky: 'bg-sky-400',
+  slate: 'bg-slate-500',
+}
 
 export default function Hero() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="border-b border-slate-200 bg-slate-50"
+      className="relative overflow-hidden bg-white"
     >
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-20 lg:px-8">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-40 left-1/3 h-96 w-96 rounded-full bg-emerald-100/60 blur-3xl"
+      />
+
+      <div
+        className={
+          sectionWrapper +
+          ' relative grid items-center gap-12 py-16 lg:grid-cols-2 lg:gap-16 lg:py-24'
+        }
+      >
         <div>
-          <span className="inline-flex items-center gap-2 text-sm font-medium text-emerald-800">
-            <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5" />
-            Politeknik Negeri Padang PSDKU Tanah Datar
-          </span>
+          <p className="text-xs font-semibold tracking-widest text-emerald-600 uppercase">
+            Sistem resmi PPKPT PSDKU Tanah Datar
+          </p>
 
           <h1
             id="hero-heading"
-            className="mt-5 text-4xl leading-tight font-semibold tracking-tight text-slate-950 md:text-5xl"
+            className="mt-5 text-4xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-5xl"
           >
-            Sampaikan Aduan Anda, Kerahasiaan Terjaga.
+            Aduan mahasiswa yang rapi, terlacak, dan aman
           </h1>
 
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-            SIPM adalah Sistem Informasi Pengaduan Mahasiswa. Laporkan
-            fasilitas, akademik, maupun keluhan lainnya kapan saja, dan tanpa
-            identitas bila Anda memilih mode anonim.
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-600">
+            SIPM menghimpun seluruh pengaduan mahasiswa PSDKU Tanah Datar ke
+            dalam satu sistem. Identitas pelapor terlindungi, petugas bekerja
+            dengan data yang sama, dan setiap unit tahu apa yang harus
+            dikerjakan.
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <ul className="mt-8 space-y-3">
+            {heroChecks.map((check) => (
+              <li key={check} className="flex gap-3">
+                <CheckCircle2
+                  aria-hidden="true"
+                  className="mt-0.5 h-4.5 w-4.5 shrink-0 text-emerald-600"
+                />
+                <span className="text-sm leading-relaxed text-slate-700">
+                  {check}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link
               to="/login"
               className={
-                'inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-700 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-emerald-800 motion-reduce:transition-none ' +
+                'inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-600/25 focus-visible:ring-offset-emerald-600 motion-reduce:transition-none ' +
                 focusRing
               }
             >
-              Buat Pengaduan
+              Buat pengaduan
               <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </Link>
+
             <a
               href="#cara-kerja"
               className={
-                'inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 motion-reduce:transition-none ' +
+                'inline-flex items-center justify-center rounded-lg px-5 py-3 text-sm font-semibold text-slate-700 transition-colors duration-200 hover:bg-slate-100 ' +
                 focusRing
               }
             >
-              Lihat Cara Kerja
+              Lihat cara kerja
             </a>
           </div>
 
-          <dl className="mt-12 grid max-w-lg grid-cols-3 gap-3 sm:gap-4">
-            {metrics.map((metric) => {
-              const Icon = metric.icon
-              return (
-                <div
-                  key={metric.label}
-                  className="border-l-2 border-emerald-700 px-3 py-1 sm:px-4"
-                >
-                  <dt className="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-slate-600 uppercase">
-                    <Icon
-                      aria-hidden="true"
-                      className="h-3.5 w-3.5 text-emerald-600"
-                    />
-                    {metric.label}
-                  </dt>
-                  <dd className="mt-1.5 text-lg font-bold text-slate-900 sm:text-xl">
-                    {metric.value}
-                  </dd>
-                </div>
-              )
-            })}
-          </dl>
+          <div className="mt-10 max-w-sm">
+            <div className="flex items-center justify-between text-xs font-medium text-slate-600">
+              <span className="flex items-center gap-1.5">
+                <Clock3 aria-hidden="true" className="h-3.5 w-3.5 text-emerald-600" />
+                Target respons 3 hari kerja
+              </span>
+            </div>
+            <div
+              role="progressbar"
+              aria-label="Target respons 3 hari kerja"
+              aria-valuenow={3}
+              aria-valuemin={0}
+              aria-valuemax={3}
+              className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-200"
+            >
+              <div className="h-full w-full rounded-full bg-emerald-500" />
+            </div>
+            <p className="mt-2 text-xs text-slate-500">
+              Belum direspon 3 hari kerja? Sistem otomatis menawarkan opsi
+              eskalasi ke PPKPT Pusat.
+            </p>
+          </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-6 sm:p-8">
-          <div className="flex items-center justify-between gap-3 border-b border-slate-200 pb-4">
-            <div>
-              <p className="text-sm font-semibold text-slate-900">Alur pengaduan</p>
-              <p className="mt-1 text-xs text-slate-500">Transparan sejak laporan dikirim</p>
+        <div className="relative">
+          <div className="rounded-2xl bg-slate-900 p-5 shadow-2xl shadow-slate-900/20 ring-1 ring-slate-800">
+            <div className="flex items-center gap-1.5 border-b border-slate-800 pb-4">
+              <span className="h-2.5 w-2.5 rounded-full bg-slate-700" />
+              <span className="h-2.5 w-2.5 rounded-full bg-slate-700" />
+              <span className="h-2.5 w-2.5 rounded-full bg-slate-700" />
+              <span className="ml-3 truncate font-mono text-xs text-slate-500">
+                sipm.psdku-tanahdatar.ac.id
+              </span>
             </div>
-            <ShieldCheck aria-hidden="true" className="h-5 w-5 text-emerald-700" />
+
+            <div className="mt-4 space-y-3">
+              {panels.map((panel) => (
+                <div
+                  key={panel.phase}
+                  className="rounded-xl border border-slate-800 bg-slate-950/60 p-4"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="font-mono text-[11px] font-semibold tracking-widest text-emerald-400 uppercase">
+                      {panel.phase} - {panel.title}
+                    </p>
+                    <span className="font-mono text-[11px] text-slate-500">
+                      {panel.count}
+                    </span>
+                  </div>
+                  <ul className="mt-3 space-y-1.5 font-mono text-xs text-slate-400">
+                    {panel.rows.map((row) => (
+                      <li key={row}>{row}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+
+              <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+                <p className="font-mono text-[11px] font-semibold tracking-widest text-slate-500 uppercase">
+                  Status aduan
+                </p>
+                <ul className="mt-3 grid grid-cols-2 gap-2">
+                  {statusRows.map((row) => (
+                    <li
+                      key={row.label}
+                      className="flex items-center gap-2 text-xs text-slate-300"
+                    >
+                      <span
+                        className={
+                          'h-2 w-2 shrink-0 rounded-full ' + toneDot[row.tone]
+                        }
+                      />
+                      {row.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
 
-          <ol className="mt-6 space-y-5 border-l border-slate-200 pl-6">
-              {timeline.map((item) => (
-                <li key={item.label} className="relative">
-                  <span
-                    aria-hidden="true"
-                    className={
-                      'absolute top-1 -left-[30px] h-2.5 w-2.5 rounded-full ring-4 ring-white ' +
-                      (item.done
-                        ? 'bg-emerald-700'
-                        : 'border border-slate-300 bg-white')
-                    }
-                  />
-                  <p
-                    className={
-                      item.done
-                        ? 'text-sm font-semibold text-slate-900'
-                        : 'text-sm font-medium text-slate-600'
-                    }
-                  >
-                    {item.label}
-                  </p>
-                  {item.time && (
-                    <p className="text-xs text-slate-500">{item.time}</p>
-                  )}
-                </li>
-              ))}
-          </ol>
+          <div className="absolute -bottom-8 -left-4 w-56 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-900/10 sm:-left-10">
+            <p className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+              Rekap bulan ini
+            </p>
+            <p className="mt-2 flex items-center gap-1.5 text-2xl font-bold text-slate-900">
+              <TrendingUp
+                aria-hidden="true"
+                className="h-4 w-4 text-emerald-600"
+              />
+              82%
+            </p>
+            <p className="mt-1 text-xs leading-relaxed text-slate-600">
+              aduan selesai dalam 3 hari kerja
+            </p>
+            <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full w-[82%] rounded-full bg-emerald-500" />
+            </div>
+          </div>
+
+          <div className="absolute -top-6 right-2 hidden items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 sm:flex">
+            <EyeOff aria-hidden="true" className="h-3.5 w-3.5" />
+            Identitas pelapor terlindungi
+          </div>
         </div>
       </div>
     </section>

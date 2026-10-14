@@ -4,10 +4,11 @@ import { Menu, ShieldCheck, X } from 'lucide-react'
 import { focusRing } from '../../lib/ui'
 
 const links = [
+  { label: 'Cara kerja', href: '#cara-kerja' },
+  { label: 'Tahapan', href: '#tahapan' },
+  { label: 'Modul', href: '#modul' },
   { label: 'Fitur', href: '#fitur' },
-  { label: 'Cara Kerja', href: '#cara-kerja' },
-  { label: 'Kategori', href: '#kategori' },
-  { label: 'Tentang', href: '#tentang' },
+  { label: 'Keamanan', href: '#tentang' },
 ]
 
 export default function Navbar() {
@@ -25,7 +26,7 @@ export default function Navbar() {
   }, [open])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white">
+    <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md">
       <a
         href="#konten-utama"
         className={
@@ -40,18 +41,17 @@ export default function Navbar() {
         <Link
           to="/"
           className={
-            'flex shrink-0 items-center gap-2 rounded-lg ' + focusRing
+            'flex shrink-0 items-center gap-2.5 rounded-lg ' + focusRing
           }
-          aria-label="SIPM, kembali ke beranda"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-700 text-white">
-            <ShieldCheck aria-hidden="true" className="h-5 w-5" />
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
+            <ShieldCheck aria-hidden="true" className="h-4 w-4" />
           </span>
           <span className="leading-tight">
-            <span className="block text-base font-bold text-slate-900">
+            <span className="block text-sm font-semibold text-slate-900">
               SIPM
             </span>
-            <span className="block text-[11px] text-slate-600">
+            <span className="block text-[11px] text-slate-500">
               PSDKU Tanah Datar
             </span>
           </span>
@@ -64,7 +64,7 @@ export default function Navbar() {
                 <a
                   href={link.href}
                   className={
-                    'rounded-md text-sm font-medium text-slate-700 transition-colors duration-200 hover:text-emerald-700 ' +
+                    'rounded-md text-sm font-medium text-slate-600 transition-colors duration-200 hover:text-emerald-700 ' +
                     focusRing
                   }
                 >
@@ -75,11 +75,11 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        <div className="hidden shrink-0 items-center gap-2 md:flex">
+        <div className="hidden shrink-0 items-center gap-4 md:flex">
           <Link
             to="/login"
             className={
-              'rounded-lg px-4 py-2 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-100 hover:text-slate-900 ' +
+              'rounded-md text-sm font-medium text-slate-700 transition-colors duration-200 hover:text-slate-900 ' +
               focusRing
             }
           >
@@ -88,11 +88,11 @@ export default function Navbar() {
           <Link
             to="/login"
             className={
-              'rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-emerald-800 ' +
+              'rounded-full border border-slate-900 px-4 py-1.5 text-sm font-semibold text-slate-900 transition-all duration-200 hover:bg-slate-900 hover:text-white ' +
               focusRing
             }
           >
-            Buat Aduan
+            Buat aduan
           </Link>
         </div>
 
@@ -155,11 +155,11 @@ export default function Navbar() {
               to="/login"
               onClick={() => setOpen(false)}
               className={
-                'rounded-lg bg-emerald-700 px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors duration-200 hover:bg-emerald-800 ' +
+                'rounded-full bg-slate-900 px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors duration-200 hover:bg-slate-800 ' +
                 focusRing
               }
             >
-              Buat Aduan
+              Buat aduan
             </Link>
           </div>
         </nav>
